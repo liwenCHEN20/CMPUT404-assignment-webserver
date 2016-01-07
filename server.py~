@@ -34,7 +34,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         print ("Got a request of: %s\n" % self.data)
         new_request = self.data.split()
         req = new_request[1]
-        print req
+
         if req == '/':
             file_direct = os.getcwd() + '/www'+req+'index.html'
 
@@ -43,17 +43,12 @@ class MyWebServer(SocketServer.BaseRequestHandler):
 
         try:
             file_content = open(os.path.normpath(file_direct)) 
-            http_header = "HTTP/1.1 200" #+ "Content-Type: text/"+file_content.split(".")[-1]+"; charset = UTF-8\r\n"
-            http_body = file_content.read()
-            file_content.close()
         except:
-            http_header = "HTTP/1.1 404 not found\n"
-            http_body = "\n"
-
+            
+        http_header = "HTTP/1.1 404 not found T-T    ^-^"
         self.request.sendall(http_header)
-        self.request.sendall('\r\n')
-        self.request.sendall(http_body)
-        self.request.sendall('content length: '+str(len(http_body))+"\n")
+        self.request.sendall("OK")
+        self.request.sendall("OK")
 
 
 if __name__ == "__main__":
