@@ -34,21 +34,50 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         print ("Got a request of: %s\n" % self.data)
         new_request = self.data.split()
         req = new_request[1]
-
-        if req == '/':
-            file_direct = os.getcwd() + '/www'+req+'index.html'
-
-        else:
-            file_direct = os.getcwd() + '/www'+req
-
-        try:
-            file_content = open(os.path.normpath(file_direct)) 
-        except:
+        print req
+        
+        if req[0] == '/' and req[-1] == '/': 
             
-        http_header = "HTTP/1.1 404 not found T-T    ^-^"
+            print "let's try here"
+            
+            file_direct = os.getcwd() + '/www'+req+'index.html'
+            
+            print file_direct
+        elif req == '/':
+            file_direct = os.getcwd() + '/www/index.html'
+        
+        
+        else: 
+            file_direct = os.getcwd() + '/www'+req  
+            print "let's try anywhere"
+            print file_direct
+        try:
+            print "let's try there"
+            
+            
+            print os.path.normpath(file_direct)
+            
+            feifei = os.path.normpath(file_direct)
+            
+            file_content = open(feifei,'r') 
+            
+            print os.path.normpath(file_direct)
+            wanglaoshi = file_direct.split(".")[-1]
+            print wanglaoshi
+            
+            
+            http_header = "HTTP/1.1 200" + "Content-Type: text/"+wanglaoshi+"; charset = UTF-8\r\n"
+            http_body = file_content.read()
+            print http_body
+            file_content.close()
+        except:
+            http_header = "HTTP/1.1 404 not found\n"
+            http_body = "\n"
+
         self.request.sendall(http_header)
-        self.request.sendall("OK")
-        self.request.sendall("OK")
+        self.request.sendall('\r\n')
+        self.request.sendall(http_body)
+        self.request.sendall('content length: '+str(len(http_body))+"\n")
 
 
 if __name__ == "__main__":
