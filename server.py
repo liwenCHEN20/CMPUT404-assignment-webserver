@@ -35,15 +35,27 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         new_request = self.data.split()
         req = new_request[1]
         print req
-        if req == '/':
+        
+        if req[0] == '/' and req[-1] == '/': 
+
             file_direct = os.getcwd() + '/www'+req+'index.html'
-
-        else:
-            file_direct = os.getcwd() + '/www'+req
-
+            
+            print file_direct
+        elif req == '/':
+            file_direct = os.getcwd() + '/www/index.html'
+        
+        
+        else: 
+            file_direct = os.getcwd() + '/www'+req  
+            print "let's try anywhere"
+            print file_direct
         try:
-            file_content = open(os.path.normpath(file_direct)) 
-            http_header = "HTTP/1.1 200" #+ "Content-Type: text/"+file_content.split(".")[-1]+"; charset = UTF-8\r\n"
+
+            
+            file_content = open(os.path.normpath(file_direct),'r') 
+
+            
+            http_header = "HTTP/1.1 200" + "Content-Type: text/"+file_direct.split(".")[-1]+"; charset = UTF-8\r\n"
             http_body = file_content.read()
             file_content.close()
         except:
@@ -54,7 +66,6 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         self.request.sendall('\r\n')
         self.request.sendall(http_body)
         self.request.sendall('content length: '+str(len(http_body))+"\n")
-
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
