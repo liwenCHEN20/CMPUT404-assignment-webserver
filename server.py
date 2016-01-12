@@ -36,6 +36,11 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         req = new_request[1]
         print req
         
+        if "../" in req:
+            self.request.sendall("HTTP/1.1 404 Bad mimetype\n")
+            return 
+        
+        
         if req[0] == '/' and req[-1] == '/': 
 
             file_direct = os.getcwd() + '/www'+req+'index.html'
@@ -47,20 +52,22 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         
         else: 
             file_direct = os.getcwd() + '/www'+req  
-            print "let's try anywhere"
-            print file_direct
-        try:
-
             
+            
+            print file_direct
+            
+            
+            
+        try:
             file_content = open(os.path.normpath(file_direct),'r') 
 
             
-            http_header = "HTTP/1.1 200" + "Content-Type: text/"+file_direct.split(".")[-1]+"; charset = UTF-8\r\n"
+            http_header = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/"+file_direct.split(".")[-1]+"; charset = UTF-8\r\n"
             http_body = file_content.read()
             file_content.close()
         except:
             http_header = "HTTP/1.1 404 not found\n"
-            http_body = "\n"
+            http_body = "\r\n"
 
         self.request.sendall(http_header)
         self.request.sendall('\r\n')

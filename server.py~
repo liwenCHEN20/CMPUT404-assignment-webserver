@@ -37,9 +37,7 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         print req
         
         if req[0] == '/' and req[-1] == '/': 
-            
-            print "let's try here"
-            
+
             file_direct = os.getcwd() + '/www'+req+'index.html'
             
             print file_direct
@@ -52,23 +50,13 @@ class MyWebServer(SocketServer.BaseRequestHandler):
             print "let's try anywhere"
             print file_direct
         try:
-            print "let's try there"
+
             
+            file_content = open(os.path.normpath(file_direct),'r') 
+
             
-            print os.path.normpath(file_direct)
-            
-            feifei = os.path.normpath(file_direct)
-            
-            file_content = open(feifei,'r') 
-            
-            print os.path.normpath(file_direct)
-            wanglaoshi = file_direct.split(".")[-1]
-            print wanglaoshi
-            
-            
-            http_header = "HTTP/1.1 200" + "Content-Type: text/"+wanglaoshi+"; charset = UTF-8\r\n"
+            http_header = "HTTP/1.1 200" + "Content-Type: text/"+file_direct.split(".")[-1]+"; charset = UTF-8\r\n"
             http_body = file_content.read()
-            print http_body
             file_content.close()
         except:
             http_header = "HTTP/1.1 404 not found\n"
@@ -78,7 +66,6 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         self.request.sendall('\r\n')
         self.request.sendall(http_body)
         self.request.sendall('content length: '+str(len(http_body))+"\n")
-
 
 if __name__ == "__main__":
     HOST, PORT = "localhost", 8080
