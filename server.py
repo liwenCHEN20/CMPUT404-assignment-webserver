@@ -38,37 +38,31 @@ class MyWebServer(SocketServer.BaseRequestHandler):
         
         if "../" in req:
             self.request.sendall("HTTP/1.1 404 Bad mimetype\n")
-            return 
-        
-        
+            return       
+        #form the direct
+        #find anything need
         if req[0] == '/' and req[-1] == '/': 
-
             file_direct = os.getcwd() + '/www'+req+'index.html'
             
             print file_direct
+            # basecase
         elif req == '/':
             file_direct = os.getcwd() + '/www/index.html'
-        
-        
+            #try to find the file
         else: 
-            file_direct = os.getcwd() + '/www'+req  
+            file_direct = os.getcwd() + '/www'+req    
             
-            
-            print file_direct
-            
-            
-            
+            # open the file here
         try:
             file_content = open(os.path.normpath(file_direct),'r') 
-
-            
             http_header = "HTTP/1.1 200 OK\r\n" + "Content-Type: text/"+file_direct.split(".")[-1]+"; charset = UTF-8\r\n"
             http_body = file_content.read()
             file_content.close()
+            #if cannot open means cannot find
         except:
             http_header = "HTTP/1.1 404 not found\n"
             http_body = "\r\n"
-
+        #post thins here
         self.request.sendall(http_header)
         self.request.sendall('\r\n')
         self.request.sendall(http_body)
